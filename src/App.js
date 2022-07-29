@@ -25,21 +25,38 @@ import catfont_og_x from './assets/catfont_og_x.jpeg';
 import catfont_og_y from './assets/catfont_og_y.jpeg';
 import catfont_og_z from './assets/catfont_og_z.jpeg';
 import './App.css';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 function App() {
-  const [inputValue, setInputValue] = useState("")
+  const urlParams = new URLSearchParams(window.location.search);
+  const receivedMessage = urlParams.get("msg")
+  const hasReceivedMessage = receivedMessage != null
+  const [inputValue, setInputValue] = useState(receivedMessage ?? "")
+  const [hasClearedMessage, setHasClearedMessage] = useState(false)
+  const canShare = !hasReceivedMessage || hasClearedMessage
+
+  const txtRef = useRef()
 
   function onChangeInput(e) {
     setInputValue(e.target.value)
   }
 
+  async function onShare() {
+   return await navigator.clipboard.writeText(`localhost:3000/?msg=${inputValue}`)
+  }
+
+  function onReply() {
+    setInputValue("")
+    setHasClearedMessage(true)
+    txtRef.current.focus()
+  }
+
   return (
-    <div>
-      <div style={{textAlign: "center", marginTop: "5%"}}>
-        <textarea value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" />
-      </div>
+    <div style={{textAlign: "center", marginTop: "5%"}}>
       <div>
+        <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" />
+      </div>
+      <div style={{textAlign: "left"}}>
         {inputValue.toLowerCase().split("").map((letter) => {
           return letter_to_cat[letter] ? 
             <img height={60} style={{marginBottom: "-12px"}} src={letter_to_cat[letter]} /> :
@@ -48,6 +65,10 @@ function App() {
               <span style={{fontSize: "60px"}}>{letter}</span> 
           })}
       </div>
+      {canShare ?
+        <button onClick={onShare}>Share</button> :
+        <button onClick={onReply}>Reply</button>
+      }
     </div>
   );
 }
