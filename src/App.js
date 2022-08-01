@@ -47,7 +47,7 @@ function App() {
   }
 
   async function onShare() {
-    const shareableLink = `${SITE_PATH}/?msg=${inputValue}`
+    const shareableLink = `${SITE_PATH}/?msg=${encodeURI(inputValue)}`
     await navigator.clipboard.writeText(shareableLink)
     window.location = shareableLink
   }
