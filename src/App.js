@@ -27,15 +27,17 @@ import catfont_og_z from './assets/catfont_og_z.jpeg';
 import './App.css';
 import { useState, useRef } from 'react';
 
-const SITE_PATH = "http://localhost:3000"
+const SITE_PATH = "https://cattype.herokuapp.com"
+// const SITE_PATH = "http://localhost:3000"
 const QUERY_PARAM_MSG = "msg"
 
-const FONT_SIZE = 60
+const FONT_SIZE = 25
+const FONT_MARGIN_BOTTOM = FONT_SIZE / 5
 
 function App() {
   const initialUrlParams = new URLSearchParams(window.location.search);
   const initialReceivedMessage = initialUrlParams.get(QUERY_PARAM_MSG)
-  const [displayReceivedMessage, setDisplayReceivedMessage] = useState(!!initialReceivedMessage)
+  const displayReceivedMessage = !!initialReceivedMessage
   const [inputValue, setInputValue] = useState(initialReceivedMessage ?? "")
 
   const txtRef = useRef()
@@ -52,12 +54,12 @@ function App() {
 
   return (
     <>
-    `<div style={{textAlign: "center", margin: "5%", backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
-      {!displayReceivedMessage && <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" style={{paddingBottom: "10px", resize: "none"}} />}
+    <div style={{textAlign: "center", margin: "5%", backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
+      {!displayReceivedMessage && <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" style={{paddingBottom: "10px", resize: "none", width: "100%", maxWidth: "100%", paddingRight: "0px", marginRight: "0px"}} />}
       <div style={{textAlign: "left", paddingBottom: "10px"}}>
         {inputValue.toLowerCase().split("").map((letter) => {
           return letter_to_cat[letter] ? 
-            <img height={FONT_SIZE} style={{marginBottom: "-12px"}} src={letter_to_cat[letter]} /> :
+            <img height={FONT_SIZE} style={{marginBottom: `-${FONT_MARGIN_BOTTOM}px`}} src={letter_to_cat[letter]} /> :
             letter.charCodeAt(0) == 10 ?
               <div /> :
               <span style={{fontSize: `${FONT_SIZE}px`}}>{letter}</span> 
