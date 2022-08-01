@@ -27,13 +27,16 @@ import catfont_og_z from './assets/catfont_og_z.jpeg';
 import './App.css';
 import { useState, useRef } from 'react';
 
+const SITE_PATH = "http://localhost:3000"
+const QUERY_PARAM_MSG = "msg"
+
+const FONT_SIZE = 60
+
 function App() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const receivedMessage = urlParams.get("msg")
-  const hasReceivedMessage = receivedMessage != null
-  const [inputValue, setInputValue] = useState(receivedMessage ?? "")
-  const [hasClearedMessage, setHasClearedMessage] = useState(false)
-  const canShare = !hasReceivedMessage || hasClearedMessage
+  const initialUrlParams = new URLSearchParams(window.location.search);
+  const initialReceivedMessage = initialUrlParams.get(QUERY_PARAM_MSG)
+  const [displayReceivedMessage, setDisplayReceivedMessage] = useState(!!initialReceivedMessage)
+  const [inputValue, setInputValue] = useState(initialReceivedMessage ?? "")
 
   const txtRef = useRef()
 
@@ -42,34 +45,30 @@ function App() {
   }
 
   async function onShare() {
-   return await navigator.clipboard.writeText(`localhost:3000/?msg=${inputValue}`)
-  }
-
-  function onReply() {
-    setInputValue("")
-    setHasClearedMessage(true)
-    txtRef.current.focus()
+    const shareableLink = `${SITE_PATH}/?msg=${inputValue}`
+    await navigator.clipboard.writeText(shareableLink)
+    window.location = shareableLink
   }
 
   return (
-    <div style={{textAlign: "center", marginTop: "5%"}}>
-      <div>
-        <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" />
-      </div>
-      <div style={{textAlign: "left"}}>
+    <>
+    `<div style={{textAlign: "center", margin: "5%", backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
+      {!displayReceivedMessage && <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" style={{paddingBottom: "10px", resize: "none"}} />}
+      <div style={{textAlign: "left", paddingBottom: "10px"}}>
         {inputValue.toLowerCase().split("").map((letter) => {
           return letter_to_cat[letter] ? 
-            <img height={60} style={{marginBottom: "-12px"}} src={letter_to_cat[letter]} /> :
+            <img height={FONT_SIZE} style={{marginBottom: "-12px"}} src={letter_to_cat[letter]} /> :
             letter.charCodeAt(0) == 10 ?
               <div /> :
-              <span style={{fontSize: "60px"}}>{letter}</span> 
+              <span style={{fontSize: `${FONT_SIZE}px`}}>{letter}</span> 
           })}
       </div>
-      {canShare ?
-        <button onClick={onShare}>Share</button> :
-        <button onClick={onReply}>Reply</button>
-      }
+      {!displayReceivedMessage && <button onClick={onShare}>Share</button>}
     </div>
+    <div style={{textAlign: "center"}}>
+      {displayReceivedMessage && <a href={SITE_PATH}><button>Reply</button></a>}
+    </div>
+    </>
   );
 }
 
