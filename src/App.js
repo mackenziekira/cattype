@@ -67,6 +67,7 @@ function App() {
   const initialReceivedMode = initialUrlParams.get(QUERY_PARAM_CATMODE)
   const isComposeMode = !initialReceivedMessage
   const [inputValue, setInputValue] = useState(initialReceivedMessage ?? "")
+  const [showCopySuccess, setShowCopySuccess] = useState(false)
 
   const [catmode, setCatmode] = useState(initialReceivedMode ?? "og")
   const isDaddyMode = catmode == "daddy"
@@ -82,17 +83,20 @@ function App() {
   }
 
   async function onShare() {
-    const shareableLink = `${SITE_PATH}/?msg=${encodeURI(inputValue)}`
+    const shareableLink = `${SITE_PATH}/?${QUERY_PARAM_CATMODE}=${catmode}&${QUERY_PARAM_MSG}=${encodeURI(inputValue)}`
     await navigator.clipboard.writeText(shareableLink)
-    window.location = shareableLink
+    setShowCopySuccess(true)
+    setTimeout(() => setShowCopySuccess(false), 3000)
   }
 
   return (
     <div style={{textAlign: "center", margin: "5%"}}>
-      <div style={{padding: "10px 0px"}}>
-        <img style={{marginRight: "10px", borderColor: isOgMode ? "blue" : "black", borderWidth: isOgMode ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("og")} height={FONT_SIZE + 20} src={letter_to_og_cat.a} />
-        <img style={{borderColor: isDaddyMode ? "blue" : "black", borderWidth: isDaddyMode ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("daddy")} height={FONT_SIZE + 20} src={letter_to_daddy_cat.a} />
-      </div>
+      {isComposeMode && 
+        <div style={{padding: "10px 0px"}}>
+          <img style={{marginRight: "10px", borderColor: isOgMode ? "blue" : "black", borderWidth: isOgMode ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("og")} height={FONT_SIZE + 20} src={letter_to_og_cat.a} />
+          <img style={{borderColor: isDaddyMode ? "blue" : "black", borderWidth: isDaddyMode ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("daddy")} height={FONT_SIZE + 20} src={letter_to_daddy_cat.a} />
+        </div>
+      }
       <div style={{backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
         {isComposeMode && <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" style={{paddingBottom: "10px", resize: "none", width: "100%", maxWidth: "100%", paddingRight: "0px", marginRight: "0px"}} />}
         <div style={{textAlign: "left", paddingBottom: "10px"}}>
@@ -106,6 +110,7 @@ function App() {
             })}
         </div>
         {isComposeMode && <button onClick={onShare}>Share</button>}
+        {showCopySuccess && <div style={{color: "red"}}>Success! Link copied to clipboard.</div>}
       </div>
       <div style={{paddingTop: "10px"}}>
         {!isComposeMode && <a href={SITE_PATH}><button>Reply</button></a>}
