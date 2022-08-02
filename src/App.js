@@ -24,21 +24,56 @@ import catfont_og_w from './assets/catfont_og_w.jpeg';
 import catfont_og_x from './assets/catfont_og_x.jpeg';
 import catfont_og_y from './assets/catfont_og_y.jpeg';
 import catfont_og_z from './assets/catfont_og_z.jpeg';
+
+import daddy_cat_a from './assets/daddy_cat_a.jpeg';
+import daddy_cat_b from './assets/daddy_cat_b.jpeg';
+import daddy_cat_c from './assets/daddy_cat_c.jpeg';
+import daddy_cat_d from './assets/daddy_cat_d.jpeg';
+import daddy_cat_e from './assets/daddy_cat_e.jpeg';
+import daddy_cat_f from './assets/daddy_cat_f.jpeg';
+import daddy_cat_g from './assets/daddy_cat_g.jpeg';
+import daddy_cat_h from './assets/daddy_cat_h.jpeg';
+import daddy_cat_i from './assets/daddy_cat_i.jpeg';
+import daddy_cat_j from './assets/daddy_cat_j.jpeg';
+import daddy_cat_k from './assets/daddy_cat_k.jpeg';
+import daddy_cat_l from './assets/daddy_cat_l.jpeg';
+import daddy_cat_m from './assets/daddy_cat_m.jpeg';
+import daddy_cat_n from './assets/daddy_cat_n.jpeg';
+import daddy_cat_o from './assets/daddy_cat_o.jpeg';
+import daddy_cat_p from './assets/daddy_cat_p.jpeg';
+import daddy_cat_q from './assets/daddy_cat_q.jpeg';
+import daddy_cat_r from './assets/daddy_cat_r.jpeg';
+import daddy_cat_s from './assets/daddy_cat_s.jpeg';
+import daddy_cat_t from './assets/daddy_cat_t.jpeg';
+import daddy_cat_u from './assets/daddy_cat_u.jpeg';
+import daddy_cat_v from './assets/daddy_cat_v.jpeg';
+import daddy_cat_w from './assets/daddy_cat_w.jpeg';
+import daddy_cat_x from './assets/daddy_cat_x.jpeg';
+import daddy_cat_y from './assets/daddy_cat_y.jpeg';
+import daddy_cat_z from './assets/daddy_cat_z.jpeg';
+
 import './App.css';
 import { useState, useRef } from 'react';
 
 const SITE_PATH = "https://cattype.herokuapp.com"
 // const SITE_PATH = "http://localhost:3000"
 const QUERY_PARAM_MSG = "msg"
+const QUERY_PARAM_CATMODE = "mode"
 
-const FONT_SIZE = 25
-const FONT_MARGIN_BOTTOM = FONT_SIZE / 5
 
 function App() {
   const initialUrlParams = new URLSearchParams(window.location.search);
   const initialReceivedMessage = initialUrlParams.get(QUERY_PARAM_MSG)
-  const displayReceivedMessage = !!initialReceivedMessage
+  const initialReceivedMode = initialUrlParams.get(QUERY_PARAM_CATMODE)
+  const isComposeMode = !initialReceivedMessage
   const [inputValue, setInputValue] = useState(initialReceivedMessage ?? "")
+
+  const [catmode, setCatmode] = useState(initialReceivedMode ?? "og")
+  const isDaddyMode = catmode == "daddy"
+  const isOgMode = catmode == "og"
+
+  const FONT_SIZE = 60
+  const FONT_MARGIN_BOTTOM = isOgMode ? FONT_SIZE / 5 : FONT_SIZE / 7
 
   const txtRef = useRef()
 
@@ -53,28 +88,33 @@ function App() {
   }
 
   return (
-    <>
-    <div style={{textAlign: "center", margin: "5%", backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
-      {!displayReceivedMessage && <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" style={{paddingBottom: "10px", resize: "none", width: "100%", maxWidth: "100%", paddingRight: "0px", marginRight: "0px"}} />}
-      <div style={{textAlign: "left", paddingBottom: "10px"}}>
-        {inputValue.toLowerCase().split("").map((letter) => {
-          return letter_to_cat[letter] ? 
-            <img height={FONT_SIZE} style={{marginBottom: `-${FONT_MARGIN_BOTTOM}px`}} src={letter_to_cat[letter]} /> :
-            letter.charCodeAt(0) == 10 ?
-              <div /> :
-              <span style={{fontSize: `${FONT_SIZE}px`}}>{letter}</span> 
-          })}
+    <div style={{textAlign: "center", margin: "5%"}}>
+      <div style={{padding: "10px 0px"}}>
+        <img style={{marginRight: "10px", borderColor: isOgMode ? "blue" : "black", borderWidth: isOgMode ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("og")} height={FONT_SIZE + 20} src={letter_to_og_cat.a} />
+        <img style={{borderColor: isDaddyMode ? "blue" : "black", borderWidth: isDaddyMode ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("daddy")} height={FONT_SIZE + 20} src={letter_to_daddy_cat.a} />
       </div>
-      {!displayReceivedMessage && <button onClick={onShare}>Share</button>}
+      <div style={{backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
+        {isComposeMode && <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" style={{paddingBottom: "10px", resize: "none", width: "100%", maxWidth: "100%", paddingRight: "0px", marginRight: "0px"}} />}
+        <div style={{textAlign: "left", paddingBottom: "10px"}}>
+          {inputValue.toLowerCase().split("").map((letter) => {
+            const cat_src = isDaddyMode ? letter_to_daddy_cat[letter] : letter_to_og_cat[letter]
+            return cat_src ? 
+              <img height={FONT_SIZE} style={{marginBottom: `-${FONT_MARGIN_BOTTOM}px`}} src={cat_src} /> :
+              letter.charCodeAt(0) == 10 ?
+                <div /> :
+                <span style={{fontSize: `${FONT_SIZE}px`}}>{letter}</span> 
+            })}
+        </div>
+        {isComposeMode && <button onClick={onShare}>Share</button>}
+      </div>
+      <div style={{paddingTop: "10px"}}>
+        {!isComposeMode && <a href={SITE_PATH}><button>Reply</button></a>}
+      </div>
     </div>
-    <div style={{textAlign: "center"}}>
-      {displayReceivedMessage && <a href={SITE_PATH}><button>Reply</button></a>}
-    </div>
-    </>
   );
 }
 
-const letter_to_cat = {
+const letter_to_og_cat = {
   a: catfont_og_a,
   b: catfont_og_b,
   c: catfont_og_c,
@@ -101,6 +141,35 @@ const letter_to_cat = {
   x: catfont_og_x,
   y: catfont_og_y,
   z: catfont_og_z,
+}
+
+const letter_to_daddy_cat = {
+  a: daddy_cat_a,
+  b: daddy_cat_b,
+  c: daddy_cat_c,
+  d: daddy_cat_d,
+  e: daddy_cat_e,
+  f: daddy_cat_f,
+  g: daddy_cat_g,
+  h: daddy_cat_h,
+  i: daddy_cat_i,
+  j: daddy_cat_j,
+  k: daddy_cat_k,
+  l: daddy_cat_l,
+  m: daddy_cat_m,
+  n: daddy_cat_n,
+  o: daddy_cat_o,
+  p: daddy_cat_p,
+  q: daddy_cat_q,
+  r: daddy_cat_r,
+  s: daddy_cat_s,
+  t: daddy_cat_t,
+  u: daddy_cat_u,
+  v: daddy_cat_v,
+  w: daddy_cat_w,
+  x: daddy_cat_x,
+  y: daddy_cat_y,
+  z: daddy_cat_z,
 }
 
 export default App;
