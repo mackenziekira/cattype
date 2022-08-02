@@ -60,6 +60,33 @@ const SITE_PATH = "https://cattype.herokuapp.com"
 const QUERY_PARAM_MSG = "msg"
 const QUERY_PARAM_CATMODE = "mode"
 
+const FONT_SIZE = 60
+
+function isOgMode(cattmode) {
+  return cattmode == "og"
+}
+
+function isDaddyMode(cattmode) {
+  return cattmode == "daddy"
+}
+
+function CatMessage({message: message, catmode: catmode}) {
+  const FONT_MARGIN_BOTTOM = isOgMode(catmode) ? FONT_SIZE / 5 : FONT_SIZE / 7
+
+  return (
+    <div style={{textAlign: "left", paddingBottom: "10px"}}>
+      {message.toLowerCase().split("").map((letter) => {
+        const cat_src = isDaddyMode(catmode) ? letter_to_daddy_cat[letter] : letter_to_og_cat[letter]
+        return cat_src ? 
+          <img height={FONT_SIZE} style={{marginBottom: `-${FONT_MARGIN_BOTTOM}px`}} src={cat_src} /> :
+          letter.charCodeAt(0) == 10 ?
+            <div /> :
+            <span style={{fontSize: `${FONT_SIZE}px`}}>{letter}</span> 
+        })}
+    </div>
+  )
+}
+
 
 function App() {
   const initialUrlParams = new URLSearchParams(window.location.search);
@@ -70,11 +97,6 @@ function App() {
   const [showCopySuccess, setShowCopySuccess] = useState(false)
 
   const [catmode, setCatmode] = useState(initialReceivedMode ?? "og")
-  const isDaddyMode = catmode == "daddy"
-  const isOgMode = catmode == "og"
-
-  const FONT_SIZE = 60
-  const FONT_MARGIN_BOTTOM = isOgMode ? FONT_SIZE / 5 : FONT_SIZE / 7
 
   const txtRef = useRef()
 
@@ -91,30 +113,29 @@ function App() {
 
   return (
     <div style={{textAlign: "center", margin: "5%"}}>
-      {isComposeMode && 
-        <div style={{padding: "10px 0px"}}>
-          <img style={{marginRight: "10px", borderColor: isOgMode ? "blue" : "black", borderWidth: isOgMode ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("og")} height={FONT_SIZE + 20} src={letter_to_og_cat.a} />
-          <img style={{borderColor: isDaddyMode ? "blue" : "black", borderWidth: isDaddyMode ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("daddy")} height={FONT_SIZE + 20} src={letter_to_daddy_cat.a} />
-        </div>
+      {isComposeMode ? 
+        <>
+          <div style={{padding: "10px 0px"}}>
+            <img style={{marginRight: "10px", borderColor: isOgMode(catmode) ? "blue" : "black", borderWidth: isOgMode(catmode) ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("og")} height={FONT_SIZE + 20} src={letter_to_og_cat.a} />
+            <img style={{borderColor: isDaddyMode(catmode) ? "blue" : "black", borderWidth: isDaddyMode(catmode) ? "2px" : "1px", borderStyle: "solid", borderRadius: "5px"}} onClick={() => setCatmode("daddy")} height={FONT_SIZE + 20} src={letter_to_daddy_cat.a} />
+          </div>
+          <div style={{backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
+            <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" style={{paddingBottom: "10px", resize: "none", width: "100%", maxWidth: "100%", paddingRight: "0px", marginRight: "0px"}} />
+            <CatMessage message={inputValue} catmode={catmode} />
+            <button onClick={onShare}>Share</button>
+            {showCopySuccess && <div style={{color: "red"}}>Success! Link copied to clipboard.</div>}
+          </div>
+        </>
+      : 
+        <>
+          <div style={{backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
+            <CatMessage message={inputValue} catmode={catmode} />
+          </div>
+          <div style={{paddingTop: "10px"}}>
+            <a href={SITE_PATH}><button>Reply</button></a>
+          </div>
+        </>
       }
-      <div style={{backgroundColor: "white", padding: "10px", borderColor: "#B87333", borderWidth: "1px", borderStyle: "solid", borderRadius: "5px"}}>
-        {isComposeMode && <textarea ref={txtRef} value={inputValue} onChange={onChangeInput} autoFocus={true} placeholder="try me" style={{paddingBottom: "10px", resize: "none", width: "100%", maxWidth: "100%", paddingRight: "0px", marginRight: "0px"}} />}
-        <div style={{textAlign: "left", paddingBottom: "10px"}}>
-          {inputValue.toLowerCase().split("").map((letter) => {
-            const cat_src = isDaddyMode ? letter_to_daddy_cat[letter] : letter_to_og_cat[letter]
-            return cat_src ? 
-              <img height={FONT_SIZE} style={{marginBottom: `-${FONT_MARGIN_BOTTOM}px`}} src={cat_src} /> :
-              letter.charCodeAt(0) == 10 ?
-                <div /> :
-                <span style={{fontSize: `${FONT_SIZE}px`}}>{letter}</span> 
-            })}
-        </div>
-        {isComposeMode && <button onClick={onShare}>Share</button>}
-        {showCopySuccess && <div style={{color: "red"}}>Success! Link copied to clipboard.</div>}
-      </div>
-      <div style={{paddingTop: "10px"}}>
-        {!isComposeMode && <a href={SITE_PATH}><button>Reply</button></a>}
-      </div>
     </div>
   );
 }
