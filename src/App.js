@@ -135,7 +135,7 @@ function App() {
     )}`;
     await navigator.clipboard.writeText(shareableLink);
     setShowCopySuccess(true);
-    setTimeout(() => setShowCopySuccess(false), 3000);
+    window.location = shareableLink
   }
 
   return (
