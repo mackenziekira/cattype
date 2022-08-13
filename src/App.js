@@ -91,11 +91,26 @@ function CatMessage({ message: message, catmode: catmode }) {
           ) : letter.charCodeAt(0) == 10 ? (
             <div />
           ) : (
-            <span style={{ fontSize: `${FONT_SIZE}px` }}>{letter}</span>
-          );
+                <span style={{ fontSize: `${FONT_SIZE}px` }}>{letter}</span>
+              );
         })}
     </div>
   );
+}
+
+function CattypeOption({ isSelected, onSelect, imgSrc }) {
+  return <img
+    style={{
+      marginRight: "10px",
+      borderColor: isSelected ? "blue" : "black",
+      borderWidth: isSelected ? "2px" : "1px",
+      borderStyle: "solid",
+      borderRadius: "5px",
+    }}
+    onClick={onSelect}
+    height={FONT_SIZE + 20}
+    src={imgSrc}
+  />
 }
 
 function App() {
@@ -128,29 +143,14 @@ function App() {
       {isComposeMode ? (
         <>
           <div style={{ padding: "10px 0px" }}>
-            <img
-              style={{
-                marginRight: "10px",
-                borderColor: isOgMode(catmode) ? "blue" : "black",
-                borderWidth: isOgMode(catmode) ? "2px" : "1px",
-                borderStyle: "solid",
-                borderRadius: "5px",
-              }}
-              onClick={() => setCatmode("og")}
-              height={FONT_SIZE + 20}
-              src={letter_to_og_cat.a}
-            />
-            <img
-              style={{
-                borderColor: isDaddyMode(catmode) ? "blue" : "black",
-                borderWidth: isDaddyMode(catmode) ? "2px" : "1px",
-                borderStyle: "solid",
-                borderRadius: "5px",
-              }}
-              onClick={() => setCatmode("daddy")}
-              height={FONT_SIZE + 20}
-              src={letter_to_daddy_cat.a}
-            />
+            <CattypeOption
+              isSelected={isOgMode(catmode)}
+              onSelect={() => setCatmode("og")}
+              imgSrc={letter_to_og_cat.a} />
+            <CattypeOption
+              isSelected={isDaddyMode(catmode)}
+              onSelect={() => setCatmode("daddy")}
+              imgSrc={letter_to_daddy_cat.a} />
           </div>
           <div
             style={{
@@ -187,26 +187,26 @@ function App() {
           </div>
         </>
       ) : (
-        <>
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "10px",
-              borderColor: "#B87333",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderRadius: "5px",
-            }}
-          >
-            <CatMessage message={inputValue} catmode={catmode} />
-          </div>
-          <div style={{ paddingTop: "10px" }}>
-            <a href={SITE_PATH}>
-              <button>Reply</button>
-            </a>
-          </div>
-        </>
-      )}
+          <>
+            <div
+              style={{
+                backgroundColor: "white",
+                padding: "10px",
+                borderColor: "#B87333",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderRadius: "5px",
+              }}
+            >
+              <CatMessage message={inputValue} catmode={catmode} />
+            </div>
+            <div style={{ paddingTop: "10px" }}>
+              <a href={SITE_PATH}>
+                <button>Reply</button>
+              </a>
+            </div>
+          </>
+        )}
     </div>
   );
 }
