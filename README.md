@@ -1,5 +1,5 @@
 # Demo
-[https://cattype.herokuapp.com](https://cattype.herokuapp.com)
+[https://cattype-sigma.vercel.app/](https://cattype-sigma.vercel.app/)
 
 # Getting Started with Create React App
 
