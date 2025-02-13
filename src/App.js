@@ -113,6 +113,12 @@ function CattypeOption({ isSelected, onSelect, imgSrc }) {
   />
 }
 
+const buttonStyles = {
+  padding: "8px",
+  borderRadius: "10px",
+  fontFamily: "monospace"
+}
+
 function App() {
   const initialUrlParams = new URLSearchParams(window.location.search);
   const initialReceivedMessage = initialUrlParams.get(QUERY_PARAM_MSG);
@@ -176,7 +182,7 @@ function App() {
               }}
             />
             <CatMessage message={inputValue} catmode={catmode} />
-            <button onClick={onShare}>Share</button>
+            <button style={buttonStyles} onClick={onShare}>Share</button>
           </div>
         </>
       ) : (
@@ -195,7 +201,7 @@ function App() {
           </div>
           <div style={{ paddingTop: "10px" }}>
             <a href={SITE_PATH}>
-              <button>Reply</button>
+              <button style={buttonStyles}>Reply</button>
             </a>
           </div>
         </>
