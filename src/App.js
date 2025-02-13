@@ -119,7 +119,6 @@ function App() {
   const initialReceivedMode = initialUrlParams.get(QUERY_PARAM_CATMODE);
   const isComposeMode = !initialReceivedMessage;
   const [inputValue, setInputValue] = useState(initialReceivedMessage ?? "");
-  const [showCopySuccess, setShowCopySuccess] = useState(false);
 
   const [catmode, setCatmode] = useState(initialReceivedMode ?? "og");
 
@@ -134,7 +133,6 @@ function App() {
       inputValue
     )}`;
     await navigator.clipboard.writeText(shareableLink);
-    setShowCopySuccess(true);
     window.location = shareableLink
   }
 
@@ -179,11 +177,6 @@ function App() {
             />
             <CatMessage message={inputValue} catmode={catmode} />
             <button onClick={onShare}>Share</button>
-            {showCopySuccess && (
-              <div style={{ color: "red" }}>
-                Success! Link copied to clipboard.
-              </div>
-            )}
           </div>
         </>
       ) : (
