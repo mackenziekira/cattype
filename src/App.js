@@ -55,7 +55,7 @@ import daddy_cat_z from "./assets/daddy_cat_z.jpeg";
 import "./App.css";
 import { useState, useRef } from "react";
 
-const SITE_PATH = "https://cattype.herokuapp.com";
+const SITE_PATH = "https://cattype-sigma.vercel.app/";
 // const SITE_PATH = "http://localhost:3000"
 const QUERY_PARAM_MSG = "msg";
 const QUERY_PARAM_CATMODE = "mode";
@@ -91,8 +91,8 @@ function CatMessage({ message: message, catmode: catmode }) {
           ) : letter.charCodeAt(0) == 10 ? (
             <div />
           ) : (
-                <span style={{ fontSize: `${FONT_SIZE}px` }}>{letter}</span>
-              );
+            <span style={{ fontSize: `${FONT_SIZE}px` }}>{letter}</span>
+          );
         })}
     </div>
   );
@@ -187,26 +187,26 @@ function App() {
           </div>
         </>
       ) : (
-          <>
-            <div
-              style={{
-                backgroundColor: "white",
-                padding: "10px",
-                borderColor: "#B87333",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderRadius: "5px",
-              }}
-            >
-              <CatMessage message={inputValue} catmode={catmode} />
-            </div>
-            <div style={{ paddingTop: "10px" }}>
-              <a href={SITE_PATH}>
-                <button>Reply</button>
-              </a>
-            </div>
-          </>
-        )}
+        <>
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "10px",
+              borderColor: "#B87333",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderRadius: "5px",
+            }}
+          >
+            <CatMessage message={inputValue} catmode={catmode} />
+          </div>
+          <div style={{ paddingTop: "10px" }}>
+            <a href={SITE_PATH}>
+              <button>Reply</button>
+            </a>
+          </div>
+        </>
+      )}
     </div>
   );
 }
